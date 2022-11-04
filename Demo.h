@@ -14,8 +14,10 @@ public:
 	~Demo();
 private:
 	GLuint shaderProgram, VBO, VAO, EBO, texture, VBO2, VAO2, EBO2, texture2, VBO3, VAO3, EBO3, texture3, VBO4, VAO4, EBO4, texture4,
-		VBO5, VAO5, EBO5, texture5, VBO6, VAO6, EBO6, texture6;
-	// vao -> corner table, vao2 -> plane, vao3 -> wall, vao4 -> art wall, vao5 -> extra wall, vao6 -> ceiling
+		VBO5, VAO5, EBO5, texture5, VBO6, VAO6, EBO6, texture6, VBO7, VAO7, EBO7, texture7, VBO8, VAO8, EBO8, texture8, VBO9, VAO9, 
+		EBO9, texture9, VBO10, VAO10, EBO10, texture10;
+	// vao -> corner table, vao2 -> plane, vao3 -> wall, vao4 -> art wall, vao5 -> extra wall, vao6 -> ceiling, vao7 -> carpet,
+	// vao8 -> art wall besar, vao9 -> sofa kecil, vao10 -> corner table black
 	float viewCamX, viewCamY, viewCamZ, upCamX, upCamY, upCamZ, posCamX, posCamY, posCamZ, CAMERA_SPEED, fovy;
 	float angle = 0;
 	virtual void Init();
@@ -24,14 +26,22 @@ private:
 	virtual void Render();
 	virtual void ProcessInput(GLFWwindow *window);
 	void BuildColoredCornerTable();
+	void BuildColoredCornerTableBlack();
 	void BuildColoredArtWall();
+	void BuildColoredArtWall2();
+	void BuildColoredCarpet();
+	void BuildColoredSmallSofa();
 	void BuildColoredPlane();
 	void BuildColoredWall();
 	void BuildColoredCeiling();
 	void BuildColoredExtraWall();
 
 	void DrawColoredCornerTable();
+	void DrawColoredCornerTableBlack();
 	void DrawColoredArtWall();
+	void DrawColoredArtWall2();
+	void DrawColoredCarpet();
+	void DrawColoredSmallSofa();
 	void DrawColoredPlane();
 	void DrawColoredWall();
 	void DrawColoredCeiling();
