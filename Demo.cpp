@@ -46,14 +46,14 @@ void Demo::Init() {
 	BuildColoredWindow();
 
 	BuildColoredGlassWindow();
-	/*
+	
 	BuildColoredCeilingFan1();
 
 	BuildColoredCeilingFan2();
-	*/
+	
 	BuildColoredDoor1();
 
-	BuildColoredDoor2();
+	//BuildColoredDoor2();
 
 	BuildColoredTable();
 
@@ -197,7 +197,7 @@ void Demo::ProcessInput(GLFWwindow *window) {
 
 
 	// The higher the value is the faster the camera looks arround
-	viewCamY += angleZ * 2;
+	viewCamY += angleZ * 50;
 
 	//limit the rotation around the x-axis
 	if ((viewCamY - posCamY) > 8) {
@@ -244,15 +244,15 @@ void Demo::StrafeCamera(float speed)
 void Demo::InitCamera()
 {
 	posCamX = 0.0f;
-	posCamY = 1.0f;
-	posCamZ = 8.0f;
-	viewCamX = 0.0f;
-	viewCamY = 1.0f;
+	posCamY = 25.0f;
+	posCamZ = 25.0f;
+	viewCamX = 1.5f;
+	viewCamY = 0.0f;
 	viewCamZ = 0.0f;
 	upCamX = 0.0f;
 	upCamY = 1.0f;
 	upCamZ = 0.0f;
-	CAMERA_SPEED = 0.001f;
+	CAMERA_SPEED = 0.002f;
 	fovy = 45.0f;
 	glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
@@ -296,14 +296,46 @@ void Demo::Render() {
 	GLint viewLoc = glGetUniformLocation(this->shaderProgram, "view");
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
-	GLint lightPosLoc = glGetUniformLocation(this->shaderProgram, "lightPos");
-
-	glUniform3f(lightPosLoc, 0, 1, 0);
+	// set lighting attributes
 	GLint viewPosLoc = glGetUniformLocation(this->shaderProgram, "viewPos");
-	glUniform3f(viewPosLoc, 4, 3, 7);
-	GLint lightColorLoc = glGetUniformLocation(this->shaderProgram, "lightColor");
-	glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f);
+	glUniform3f(viewPosLoc, posCamX, posCamY, posCamZ);
 
+	// point light 1
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[0].position"), -22.0f, 10.0f, -17.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[0].ambient"), 1.0f, 0.0f, 1.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[0].diffuse"), 1.0f, 0.0f, 0.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[0].specular"), 1.0f, 0.0f, 0.0f);
+	glUniform1f(glGetUniformLocation(this->shaderProgram, "pointLights[0].constant"), 1.0f);
+	glUniform1f(glGetUniformLocation(this->shaderProgram, "pointLights[0].linear"), 0.045f);
+	glUniform1f(glGetUniformLocation(this->shaderProgram, "pointLights[0].quadratic"), 0.0075f);
+	
+	// point light 2
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[1].position"), -22.0f, 10.0f, -17.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[1].ambient"), 0.0f, 1.0f, 0.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[1].diffuse"), 0.0f, 1.0f, 0.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[1].specular"), 0.0f, 1.0f, 0.0f);
+	glUniform1f(glGetUniformLocation(this->shaderProgram, "pointLights[1].constant"), 1.0f);
+	glUniform1f(glGetUniformLocation(this->shaderProgram, "pointLights[1].linear"), 0.045f);
+	glUniform1f(glGetUniformLocation(this->shaderProgram, "pointLights[1].quadratic"), 0.0075f);
+	
+	// point light 3
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[2].position"), -22.0f, 10.0f, -17.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[2].ambient"), 0.0f, 0.0f, 1.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[2].diffuse"), 0.0f, 0.0f, 1.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[2].specular"), 0.0f, 0.0f, 1.0f);
+	glUniform1f(glGetUniformLocation(this->shaderProgram, "pointLights[2].constant"), 1.0f);
+	glUniform1f(glGetUniformLocation(this->shaderProgram, "pointLights[2].linear"), 0.045f);
+	glUniform1f(glGetUniformLocation(this->shaderProgram, "pointLights[2].quadratic"), 0.0075f);
+	
+	// point light 4
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[3].position"), -22.0f, 10.0f, -17.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[3].ambient"), 0.0f, 1.0f, 1.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[3].diffuse"), 0.0f, 1.0f, 1.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[3].specular"), 0.0f, 1.0f, 1.0f);
+	glUniform1f(glGetUniformLocation(this->shaderProgram, "pointLights[3].constant"), 1.0f);
+	glUniform1f(glGetUniformLocation(this->shaderProgram, "pointLights[3].linear"), 0.045f);
+	glUniform1f(glGetUniformLocation(this->shaderProgram, "pointLights[3].quadratic"), 0.0075f);
+	
 	//std::cout << "px : " << px << "\npy : " << py << "\n\n";
 
 	DrawColoredCornerTable();
@@ -335,16 +367,14 @@ void Demo::Render() {
 	DrawColoredWindow();
 
 	DrawColoredGlassWindow();
-	/*
+
 	DrawColoredCeilingFan1();
 
 	DrawColoredCeilingFan2();
 
-	*/
-
 	DrawColoredDoor1();
 
-	DrawColoredDoor2();
+	//DrawColoredDoor2();
 
 	DrawColoredTable();
 
@@ -979,7 +1009,6 @@ void Demo::DrawColoredCarpet()
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture7);
 	glUniform1i(glGetUniformLocation(this->shaderProgram, "ourTexture"), 0);
-
 	glBindVertexArray(VAO7); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 
 	glm::mat4 model;
@@ -1663,7 +1692,7 @@ void Demo::BuildColoredWindow() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	int width, height;
-	unsigned char* image = SOIL_load_image("window.png", &width, &height, 0, SOIL_LOAD_RGBA);
+	unsigned char* image = SOIL_load_image("window1.png", &width, &height, 0, SOIL_LOAD_RGBA);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -1791,7 +1820,7 @@ void Demo::DrawColoredWindow()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 }
-/*
+
 void Demo::BuildColoredCeilingFan1() {
 	// load image into texture memory
 	// ------------------------------
@@ -1917,14 +1946,33 @@ void Demo::DrawColoredCeilingFan1()
 
 
 	glm::mat4 model;
-	model = glm::translate(model, glm::vec3(0, 34.2, 0));
 
-	model = glm::scale(model, glm::vec3(1, 1.5, 1));
+	for (int i = 1; i < 6; ++i) {
+		if (i == 1) {
+			model = glm::translate(model, glm::vec3(0, 34.2, 0)); //34.2
+			model = glm::scale(model, glm::vec3(1, 1.5, 1));
+		}
+		else if (i == 2) {
+			model = glm::translate(model, glm::vec3(0, -1.1, 0));
+			model = glm::scale(model, glm::vec3(0.3, 1.25, 0.3));
+		}
+		else if (i == 3) {
+			model = glm::translate(model, glm::vec3(0, -0.7, 0));
+			model = glm::scale(model, glm::vec3(2.5, 0.4, 2.5));
+		}
+		else if (i == 4) {
+			model = glm::translate(model, glm::vec3(0, -0.7, 0));
+			model = glm::scale(model, glm::vec3(2, 0.4, 2));
+		}
+		else if (i == 5) {
+			model = glm::translate(model, glm::vec3(0, -2.75, 0));
+			model = glm::scale(model, glm::vec3(1, 1, 1));
+		}
 
-	GLint modelLoc = glGetUniformLocation(this->shaderProgram, "model");
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		GLint modelLoc = glGetUniformLocation(this->shaderProgram, "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
@@ -1939,7 +1987,7 @@ void Demo::BuildColoredCeilingFan2() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	int width, height;
-	unsigned char* image = SOIL_load_image("tableLamp2.png", &width, &height, 0, SOIL_LOAD_RGBA);
+	unsigned char* image = SOIL_load_image("baling2.png", &width, &height, 0, SOIL_LOAD_RGBA);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -2056,9 +2104,9 @@ void Demo::DrawColoredCeilingFan2() //baling2
 
 	for (int i = 1; i < 3; ++i) {
 		if (i == 1) {
-			model = glm::translate(model, glm::vec3(0, 33.5, 0));
+			model = glm::translate(model, glm::vec3(0, 30.3, 0)); //33.5
 			model = glm::rotate(model, angle, glm::vec3(0, 1, 0));
-			model = glm::scale(model, glm::vec3(20, 0.5, 2));
+			model = glm::scale(model, glm::vec3(15, 0.5, 1.5));
 		}
 		else if (i == 2) {
 			model = glm::scale(model, glm::vec3(0.1, 1, 10));
@@ -2072,7 +2120,7 @@ void Demo::DrawColoredCeilingFan2() //baling2
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 }
-*/
+
 void Demo::BuildColoredDoor1() {
 	// load image into texture memory
 	// ------------------------------
@@ -2196,7 +2244,7 @@ void Demo::DrawColoredDoor1()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 }
-
+/*
 void Demo::BuildColoredDoor2() {
 	// load image into texture memory
 	// ------------------------------
@@ -2335,7 +2383,7 @@ void Demo::DrawColoredDoor2()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 }
-
+*/
 void Demo::BuildColoredTable() {
 	// load image into texture memory
 	// ------------------------------
@@ -2447,8 +2495,8 @@ void Demo::DrawColoredTable()
 
 	for (int i = 1; i < 4; ++i) {
 		if (i == 1) {
-			model = glm::translate(model, glm::vec3(3, 3, -1.5));
-			model = glm::scale(model, glm::vec3(20, 1, 8));
+			model = glm::translate(model, glm::vec3(4.5, 3, -1.5));
+			model = glm::scale(model, glm::vec3(25, 1, 8));
 		}
 		else if (i == 2) {
 			model = glm::translate(model, glm::vec3(-0.45, -1.9, 0));
@@ -2525,9 +2573,9 @@ void Demo::DrawColoredPlane()
 {
 	glUseProgram(shaderProgram);
 
-	glActiveTexture(GL_TEXTURE1);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture2);
-	glUniform1i(glGetUniformLocation(this->shaderProgram, "ourTexture"), 1);
+	glUniform1i(glGetUniformLocation(this->shaderProgram, "ourTexture"), 0);
 
 	glBindVertexArray(VAO2); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 
@@ -2823,5 +2871,5 @@ void Demo::DrawColoredExtraWall() {
 
 int main(int argc, char** argv) {
 	RenderEngine &app = Demo();
-	app.Start("Transformation: Transform Cube", 800, 600, false, false);
+	app.Start("Proyek Akhir Amigos: Ruang Tamu Minimalis", 800, 600, false, false);
 }

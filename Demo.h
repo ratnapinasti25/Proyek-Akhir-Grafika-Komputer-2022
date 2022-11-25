@@ -75,12 +75,10 @@ private:
 	void BuildColoredTableLamp2();
 	void BuildColoredWindow();
 	void BuildColoredGlassWindow();
-	/*
 	void BuildColoredCeilingFan1();
 	void BuildColoredCeilingFan2();
-	*/
 	void BuildColoredDoor1();
-	void BuildColoredDoor2();
+	//void BuildColoredDoor2();
 	void BuildColoredTable();
 	void BuildColoredPlane();
 	void BuildColoredWall();
@@ -98,12 +96,10 @@ private:
 	void DrawColoredTableLamp2();
 	void DrawColoredWindow();
 	void DrawColoredGlassWindow();
-	/*
 	void DrawColoredCeilingFan1();
 	void DrawColoredCeilingFan2();
-	*/
 	void DrawColoredDoor1();
-	void DrawColoredDoor2();
+	//void DrawColoredDoor2();
 	void DrawColoredTable();
 	void DrawColoredPlane();
 	void DrawColoredWall();
