@@ -13,13 +13,30 @@ public:
 	Demo();
 	~Demo();
 private:
-	GLuint shaderProgram, VBO, VAO, EBO, texture, VBO2, VAO2, EBO2, texture2, VBO3, VAO3, EBO3, texture3, VBO4, VAO4, EBO4, texture4,
-		VBO5, VAO5, EBO5, texture5, VBO6, VAO6, EBO6, texture6, VBO7, VAO7, EBO7, texture7, VBO8, VAO8, EBO8, texture8, VBO9, VAO9, 
-		EBO9, texture9, VBO10, VAO10, EBO10, texture10, VBO11, VAO11, EBO11, texture11, VBO12, VAO12, EBO12, texture12, VBO13, VAO13,
-		EBO13, texture13, VBO14, VAO14, EBO14, texture14, VBO15, VAO15, EBO15, texture15, VBO16, VAO16, EBO16, texture16, VBO17, VAO17,
-		EBO17, texture17, VBO18, VAO18, EBO18, texture18, VBO19, VAO19, EBO19, texture19, VBO20, VAO20, EBO20, texture20;
-	// vao -> corner table, vao2 -> plane, vao3 -> wall, vao4 -> art wall, vao5 -> extra wall, vao6 -> ceiling, vao7 -> carpet,
-	// vao8 -> art wall besar, vao9 -> sofa kecil, vao10 -> corner table black, vao11 -> sofa besar, vao12 -> lampu meja, vao13->lampu meja 2
+	GLuint shaderProgram, VBO, VAO, EBO, texture, // corner table
+		VBO2, VAO2, EBO2, texture2, // plane
+		VBO3, VAO3, EBO3, texture3, // wall
+		VBO4, VAO4, EBO4, texture4, // art wall
+		VBO5, VAO5, EBO5, texture5, // extra wall
+		VBO6, VAO6, EBO6, texture6, // ceiling
+		VBO7, VAO7, EBO7, texture7, // carpet
+		VBO8, VAO8, EBO8, texture8, // art wall 2
+		VBO9, VAO9, EBO9, texture9, // small sofa
+		VBO10, VAO10, EBO10, texture10, // corner table black
+		VBO11, VAO11, EBO11, texture11, // large sofa
+		VBO12, VAO12, EBO12, texture12, // table lamp
+		VBO13, VAO13, EBO13, texture13, // table lamp 2 
+		VBO14, VAO14, EBO14, texture14, // glass window
+		VBO15, VAO15, EBO15, texture15, // window
+		VBO16, VAO16, EBO16, texture16, // ceiling fan 1 (penyangga kipas angin)
+		VBO17, VAO17, EBO17, texture17, // ceiling fan 2 (baling-baling)
+		VBO18, VAO18, EBO18, texture18, // door
+		VBO19, VAO19, EBO19, texture19, //
+		VBO20, VAO20, EBO20, texture20, // table (meja di tengah)
+		VBO21, VAO21, EBO21, texture21, // spotlight 1
+		VBO22, VAO22, EBO22, texture22, // spotlight 2
+		VBO23, VAO23, EBO23, texture23, // spotlight 3
+		VBO24, VAO24, EBO24, texture24; // spotlight 4
 	float viewCamX, viewCamY, viewCamZ, upCamX, upCamY, upCamZ, posCamX, posCamY, posCamZ, CAMERA_SPEED, fovy;
 	float angle = 0;
 
@@ -78,8 +95,11 @@ private:
 	void BuildColoredCeilingFan1();
 	void BuildColoredCeilingFan2();
 	void BuildColoredDoor1();
-	//void BuildColoredDoor2();
 	void BuildColoredTable();
+	void BuildColoredSpotlight1();
+	void BuildColoredSpotlight2();
+	void BuildColoredSpotlight3();
+	void BuildColoredSpotlight4();
 	void BuildColoredPlane();
 	void BuildColoredWall();
 	void BuildColoredCeiling();
@@ -99,8 +119,11 @@ private:
 	void DrawColoredCeilingFan1();
 	void DrawColoredCeilingFan2();
 	void DrawColoredDoor1();
-	//void DrawColoredDoor2();
 	void DrawColoredTable();
+	void DrawColoredSpotlight1();
+	void DrawColoredSpotlight2();
+	void DrawColoredSpotlight3();
+	void DrawColoredSpotlight4();
 	void DrawColoredPlane();
 	void DrawColoredWall();
 	void DrawColoredCeiling();
