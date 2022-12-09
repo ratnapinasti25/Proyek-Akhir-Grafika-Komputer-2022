@@ -63,6 +63,8 @@ void Demo::Init() {
 
 	BuildColoredSpotlight4();
 
+	//BuildColoredSkybox();
+
 	InitCamera();
 }
 
@@ -141,6 +143,9 @@ void Demo::DeInit() {
 	glDeleteVertexArrays(1, &VAO24);
 	glDeleteBuffers(1, &VBO24);
 	glDeleteBuffers(1, &EBO24);
+	glDeleteVertexArrays(1, &VAO25);
+	glDeleteBuffers(1, &VBO25);
+	glDeleteBuffers(1, &EBO25);
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
@@ -270,7 +275,7 @@ void Demo::InitCamera()
 	upCamX = 0.0f;
 	upCamY = 1.0f;
 	upCamZ = 0.0f;
-	CAMERA_SPEED = 0.0015f;
+	CAMERA_SPEED = 0.0165f;
 	fovy = 45.0f;
 	glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
@@ -287,7 +292,7 @@ void Demo::Render() {
 	glViewport(0, 0, this->screenWidth, this->screenHeight);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.97f, 0.92f, 0.87f, 1.0f);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -309,8 +314,8 @@ void Demo::Render() {
 	GLint projLoc = glGetUniformLocation(this->shaderProgram, "projection");
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
 
 	// LookAt camera (position, target/direction, up)
 	glm::mat4 view = glm::lookAt(glm::vec3(posCamX, posCamY, posCamZ), glm::vec3(viewCamX, viewCamY, viewCamZ), glm::vec3(upCamX, upCamY, upCamZ));
@@ -320,6 +325,12 @@ void Demo::Render() {
 	// set lighting attributes
 	GLint viewPosLoc = glGetUniformLocation(this->shaderProgram, "viewPos");
 	glUniform3f(viewPosLoc, posCamX, posCamY, posCamZ);
+
+
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "dirLight.direction"), 0.0f, 0.0f, 0.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "dirLight.ambient"), -0.05f, -0.05f, -0.05f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "dirLight.diffuse"), 0.0f, 0.0f, 0.0f);
+	glUniform3f(glGetUniformLocation(this->shaderProgram, "dirLight.specular"), 0.1f, 0.1f, 0.1f);
 
 	// point light 1
 	glUniform3f(glGetUniformLocation(this->shaderProgram, "pointLights[0].position"), -22.0f, 10.0f, -17.0f);
@@ -411,43 +422,29 @@ void Demo::Render() {
 	glUniform1f(glGetUniformLocation(this->shaderProgram, "spotLight[3].outerCutOff"), glm::cos(glm::radians(15.0f)));
 	//std::cout << "px : " << px << "\npy : " << py << "\n\n";
 
-	DrawColoredCornerTable();
 
-	DrawColoredCornerTableBlack();
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	DrawColoredGlassWindow();
+
+	glDisable(GL_BLEND);
 
 	DrawColoredPlane();
 
-	DrawColoredWall();
-
 	DrawColoredCeiling();
 
-	DrawColoredExtraWall();
+	DrawColoredWall();
 
 	DrawColoredArtWall();
 
 	DrawColoredArtWall2();
 
-	DrawColoredCarpet();
-
-	DrawColoredSmallSofa();
-
-	DrawColoredLargeSofa();
-
-	DrawColoredTableLamp();
-
-	DrawColoredTableLamp2();
-
 	DrawColoredWindow();
-
-	DrawColoredGlassWindow();
-
-	DrawColoredCeilingFan1();
-
-	DrawColoredCeilingFan2();
 
 	DrawColoredDoor1();
 
-	DrawColoredTable();
+	DrawColoredExtraWall();
 
 	DrawColoredSpotlight1();
 
@@ -457,7 +454,28 @@ void Demo::Render() {
 
 	DrawColoredSpotlight4();
 
-	glDisable(GL_BLEND);
+	DrawColoredCarpet();
+
+	DrawColoredLargeSofa();
+
+	DrawColoredCornerTable();
+
+	DrawColoredCornerTableBlack();
+
+	DrawColoredTableLamp();
+
+	DrawColoredTableLamp2();
+
+	DrawColoredSmallSofa();
+
+	DrawColoredCeilingFan1();
+
+	DrawColoredCeilingFan2();
+
+	DrawColoredTable();
+
+	//DrawColoredSkybox();
+
 	glDisable(GL_DEPTH_TEST);
 }
 
@@ -1645,7 +1663,7 @@ void Demo::BuildColoredGlassWindow() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	int width, height;
-	unsigned char* image = SOIL_load_image("glass3.jpeg", &width, &height, 0, SOIL_LOAD_RGBA);
+	unsigned char* image = SOIL_load_image("glass2.png", &width, &height, 0, SOIL_LOAD_RGBA);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -1692,12 +1710,12 @@ void Demo::BuildColoredGlassWindow() {
 	};
 
 	unsigned int indices[] = {
-		0,  1,  2,  0,  2,  3,   // front
-		4,  5,  6,  4,  6,  7,   // right
 		8,  9,  10, 8,  10, 11,  // back
+		20, 22, 21, 20, 23, 22,   // bottom
+		4,  5,  6,  4,  6,  7,   // right
 		12, 14, 13, 12, 15, 14,  // left
 		16, 18, 17, 16, 19, 18,  // upper
-		20, 22, 21, 20, 23, 22   // bottom
+		0,  1,  2,  0,  2,  3,   // front
 	};
 
 	glGenVertexArrays(1, &VAO14);
@@ -1746,12 +1764,12 @@ void Demo::DrawColoredGlassWindow()
 
 	for (int i = 1; i < 3; ++i) {
 		if (i == 1) {
-			model = glm::translate(model, glm::vec3(-34.8, 21, 9.13));
-			model = glm::scale(model, glm::vec3(0.15, 16.9, 5.55));
+			model = glm::translate(model, glm::vec3(-34.8, 21, 9.13)); //-34.8, 21, 9.13
+			model = glm::scale(model, glm::vec3(0.55, 16.9, 5.55)); //0.55, 16.9, 5.55
 		}
 		else if (i == 2) {
-			model = glm::translate(model, glm::vec3(0, 0, -1.2));
-			model = glm::scale(model, glm::vec3(1, 1, 1.2));
+			model = glm::translate(model, glm::vec3(0, 0, -1.13));
+			model = glm::scale(model, glm::vec3(1, 1, 1.0));
 		}
 
 		GLint modelLoc = glGetUniformLocation(this->shaderProgram, "model");
@@ -3345,7 +3363,111 @@ void Demo::DrawColoredExtraWall() {
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 }
+/*
+void Demo::BuildColoredSkybox() {
+	// load image into texture memory
+	// ------------------------------
+	// Load and create a texture 
+	glGenTextures(1, &texture25);
+	glBindTexture(GL_TEXTURE_2D, texture25);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+	int width, height;
+	unsigned char* image = SOIL_load_image("artWall.png", &width, &height, 0, SOIL_LOAD_RGBA);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// Build geometry
+	float vertices[] = {
+		// format position, tex coords
+		// front
+		-0.5, -0.5, 0.5, 0, 0,  // 0
+		0.5, -0.5, 0.5, 1, 0,   // 1
+		0.5,  0.5, 0.5, 1, 1,   // 2
+		-0.5,  0.5, 0.5, 0, 1,  // 3
+
+		// right
+		0.5,  0.5,  0.5, 0, 0,  // 4
+		0.5,  0.5, -0.5, 1, 0,  // 5
+		0.5, -0.5, -0.5, 1, 1,  // 6
+		0.5, -0.5,  0.5, 0, 1,  // 7
+
+		// back
+		-0.5, -0.5, -0.5, 0, 0, // 8 
+		0.5,  -0.5, -0.5, 1, 0, // 9
+		0.5,   0.5, -0.5, 1, 1, // 10
+		-0.5,  0.5, -0.5, 0, 1, // 11
+
+		// left
+		-0.5, -0.5, -0.5, 0, 0, // 12
+		-0.5, -0.5,  0.5, 1, 0, // 13
+		-0.5,  0.5,  0.5, 1, 1, // 14
+		-0.5,  0.5, -0.5, 0, 1, // 15
+
+		// upper
+		0.5, 0.5,  0.5, 0, 0,   // 16
+		-0.5, 0.5,  0.5, 1, 0,  // 17
+		-0.5, 0.5, -0.5, 1, 1,  // 18
+		0.5, 0.5, -0.5, 0, 1,   // 19
+
+		// bottom
+		-0.5, -0.5, -0.5, 0, 0, // 20
+		0.5, -0.5, -0.5, 1, 0,  // 21
+		0.5, -0.5,  0.5, 1, 1,  // 22
+		-0.5, -0.5,  0.5, 0, 1, // 23
+	};
+
+	unsigned int indices[] = {
+		0,  1,  2,  0,  2,  3,   // front
+		4,  5,  6,  4,  6,  7,   // right
+		8,  9,  10, 8,  10, 11,  // back
+		12, 14, 13, 12, 15, 14,  // left
+		16, 18, 17, 16, 19, 18,  // upper
+		20, 22, 21, 20, 23, 22   // bottom
+	};
+
+	glGenVertexArrays(1, &VAO25);
+	glGenBuffers(1, &VBO25);
+	glGenBuffers(1, &EBO25);
+
+	glBindVertexArray(VAO25);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO25);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO25);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(0 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(0);
+	// TexCoord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(0); // Unbind VAO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void Demo::DrawColoredSkybox() {
+	glUseProgram(shaderProgram);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture25);
+	glUniform1i(glGetUniformLocation(this->shaderProgram, "ourTexture"), 0);
+
+	glBindVertexArray(VAO25); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+
+	glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindVertexArray(0);
+}
+*/
 int main(int argc, char** argv) {
 	RenderEngine &app = Demo();
 	app.Start("Proyek Akhir Amigos: Ruang Tamu Minimalis", 800, 600, false, false);

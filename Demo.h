@@ -36,7 +36,8 @@ private:
 		VBO21, VAO21, EBO21, texture21, // spotlight 1
 		VBO22, VAO22, EBO22, texture22, // spotlight 2
 		VBO23, VAO23, EBO23, texture23, // spotlight 3
-		VBO24, VAO24, EBO24, texture24; // spotlight 4
+		VBO24, VAO24, EBO24, texture24, // spotlight 4
+		VBO25, VAO25, EBO25, texture25; // skybox
 	float viewCamX, viewCamY, viewCamZ, upCamX, upCamY, upCamZ, posCamX, posCamY, posCamZ, CAMERA_SPEED, fovy;
 	float angle = 0;
 
@@ -104,6 +105,7 @@ private:
 	void BuildColoredWall();
 	void BuildColoredCeiling();
 	void BuildColoredExtraWall();
+	//void BuildColoredSkybox();
 
 	void DrawColoredCornerTable();
 	void DrawColoredCornerTableBlack();
@@ -128,6 +130,7 @@ private:
 	void DrawColoredWall();
 	void DrawColoredCeiling();
 	void DrawColoredExtraWall();
+	//void DrawColoredSkybox();
 
 	void MoveCamera(float speed);
 	void StrafeCamera(float speed);
