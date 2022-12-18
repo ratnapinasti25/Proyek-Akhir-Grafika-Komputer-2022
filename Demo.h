@@ -37,7 +37,13 @@ private:
 		VBO22, VAO22, EBO22, texture22, // spotlight 2
 		VBO23, VAO23, EBO23, texture23, // spotlight 3
 		VBO24, VAO24, EBO24, texture24, // spotlight 4
-		VBO25, VAO25, EBO25, texture25; // skybox
+		VBOskyright, VAOskyright, EBOskyright, textureskyright, // skybox-right
+		VBOskyleft, VAOskyleft, EBOskyleft, textureskyleft, // skybox-left
+		VBOskytop, VAOskytop, EBOskytop, textureskytop, // skybox-top
+		VBOskybottom, VAOskybottom, EBOskybottom, textureskybottom, //skybox-bottom
+		VBOskyfront, VAOskyfront, EBOskyfront, textureskyfront, //skybox-front
+		VBOskyback, VAOskyback, EBOskyback, textureskyback; //skybox-back
+
 	float viewCamX, viewCamY, viewCamZ, upCamX, upCamY, upCamZ, posCamX, posCamY, posCamZ, CAMERA_SPEED, fovy;
 	float angle = 0;
 
@@ -105,7 +111,12 @@ private:
 	void BuildColoredWall();
 	void BuildColoredCeiling();
 	void BuildColoredExtraWall();
-	//void BuildColoredSkybox();
+	void BuildColoredSkyboxRight();
+	void BuildColoredSkyboxLeft();
+	void BuildColoredSkyboxTop();
+	void BuildColoredSkyboxBottom();
+	void BuildColoredSkyboxFront();
+	void BuildColoredSkyboxBack();
 
 	void DrawColoredCornerTable();
 	void DrawColoredCornerTableBlack();
@@ -130,7 +141,12 @@ private:
 	void DrawColoredWall();
 	void DrawColoredCeiling();
 	void DrawColoredExtraWall();
-	//void DrawColoredSkybox();
+	void DrawColoredSkyboxRight();
+	void DrawColoredSkyboxLeft();
+	void DrawColoredSkyboxTop();
+	void DrawColoredSkyboxBottom();
+	void DrawColoredSkyboxFront();
+	void DrawColoredSkyboxBack();
 
 	void MoveCamera(float speed);
 	void StrafeCamera(float speed);

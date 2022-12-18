@@ -25,6 +25,18 @@ void Demo::Init() {
 
 	BuildColoredWall();
 
+	BuildColoredSkyboxRight();
+
+	BuildColoredSkyboxLeft();
+
+	BuildColoredSkyboxTop();
+
+	BuildColoredSkyboxBottom();
+
+	BuildColoredSkyboxFront();
+
+	BuildColoredSkyboxBack();
+
 	BuildColoredCeiling();
 
 	BuildColoredExtraWall();
@@ -62,8 +74,6 @@ void Demo::Init() {
 	BuildColoredSpotlight3();
 
 	BuildColoredSpotlight4();
-
-	//BuildColoredSkybox();
 
 	InitCamera();
 }
@@ -143,9 +153,24 @@ void Demo::DeInit() {
 	glDeleteVertexArrays(1, &VAO24);
 	glDeleteBuffers(1, &VBO24);
 	glDeleteBuffers(1, &EBO24);
-	glDeleteVertexArrays(1, &VAO25);
-	glDeleteBuffers(1, &VBO25);
-	glDeleteBuffers(1, &EBO25);
+	glDeleteVertexArrays(1, &VAOskyright);
+	glDeleteBuffers(1, &VBOskyright);
+	glDeleteBuffers(1, &EBOskyright);
+	glDeleteVertexArrays(1, &VAOskyleft);
+	glDeleteBuffers(1, &VBOskyleft);
+	glDeleteBuffers(1, &EBOskyleft);
+	glDeleteVertexArrays(1, &VAOskytop);
+	glDeleteBuffers(1, &VBOskytop);
+	glDeleteBuffers(1, &EBOskytop);
+	glDeleteVertexArrays(1, &VAOskybottom);
+	glDeleteBuffers(1, &VBOskybottom);
+	glDeleteBuffers(1, &EBOskybottom);
+	glDeleteVertexArrays(1, &VAOskyfront);
+	glDeleteBuffers(1, &VBOskyfront);
+	glDeleteBuffers(1, &EBOskyfront);
+	glDeleteVertexArrays(1, &VAOskyback);
+	glDeleteBuffers(1, &VBOskyback);
+	glDeleteBuffers(1, &EBOskyback);
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
@@ -187,14 +212,14 @@ void Demo::ProcessInput(GLFWwindow *window) {
 
 
 	if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-		posCamY += 0.005f;
-		viewCamY += 0.005f;
+		posCamY += 0.06f;
+		viewCamY += 0.06f;
 	}
 
 
 	if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-		posCamY -= 0.005f;
-		viewCamY -= 0.005f;
+		posCamY -= 0.06f;
+		viewCamY -= 0.06f;
 	}
 
 
@@ -220,7 +245,7 @@ void Demo::ProcessInput(GLFWwindow *window) {
 
 
 	// The higher the value is the faster the camera looks arround
-	viewCamY += angleZ * 50;
+	viewCamY += angleZ * 30;
 
 	//limit the rotation around the x-axis
 	if ((viewCamY - posCamY) > 8) {
@@ -275,7 +300,7 @@ void Demo::InitCamera()
 	upCamX = 0.0f;
 	upCamY = 1.0f;
 	upCamZ = 0.0f;
-	CAMERA_SPEED = 0.0165f;
+	CAMERA_SPEED = 0.0045f;
 	fovy = 45.0f;
 	glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
@@ -292,7 +317,8 @@ void Demo::Render() {
 	glViewport(0, 0, this->screenWidth, this->screenHeight);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.97f, 0.92f, 0.87f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	//glClearColor(0.97f, 0.92f, 0.87f, 1.0f);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -430,6 +456,18 @@ void Demo::Render() {
 
 	glDisable(GL_BLEND);
 
+	DrawColoredSkyboxRight();
+
+	DrawColoredSkyboxLeft();
+
+	DrawColoredSkyboxTop();
+
+	DrawColoredSkyboxBottom();
+
+	DrawColoredSkyboxFront();
+
+	DrawColoredSkyboxBack();
+	
 	DrawColoredPlane();
 
 	DrawColoredCeiling();
@@ -473,8 +511,6 @@ void Demo::Render() {
 	DrawColoredCeilingFan2();
 
 	DrawColoredTable();
-
-	//DrawColoredSkybox();
 
 	glDisable(GL_DEPTH_TEST);
 }
@@ -3238,7 +3274,7 @@ void Demo::DrawColoredCeiling() {
 
 	glBindVertexArray(VAO6); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 
-	glDrawElements(GL_TRIANGLES, 30, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
@@ -3363,81 +3399,45 @@ void Demo::DrawColoredExtraWall() {
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 }
-/*
-void Demo::BuildColoredSkybox() {
+
+void Demo::BuildColoredSkyboxRight() {
 	// load image into texture memory
 	// ------------------------------
 	// Load and create a texture 
-	glGenTextures(1, &texture25);
-	glBindTexture(GL_TEXTURE_2D, texture25);
+	glGenTextures(1, &textureskyright);
+	glBindTexture(GL_TEXTURE_2D, textureskyright);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	int width, height;
-	unsigned char* image = SOIL_load_image("artWall.png", &width, &height, 0, SOIL_LOAD_RGBA);
+	unsigned char* image = SOIL_load_image("right.png", &width, &height, 0, SOIL_LOAD_RGBA);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// Build geometry
-	float vertices[] = {
+	GLfloat vertices[] = {
 		// format position, tex coords
-		// front
-		-0.5, -0.5, 0.5, 0, 0,  // 0
-		0.5, -0.5, 0.5, 1, 0,   // 1
-		0.5,  0.5, 0.5, 1, 1,   // 2
-		-0.5,  0.5, 0.5, 0, 1,  // 3
-
 		// right
-		0.5,  0.5,  0.5, 0, 0,  // 4
-		0.5,  0.5, -0.5, 1, 0,  // 5
-		0.5, -0.5, -0.5, 1, 1,  // 6
-		0.5, -0.5,  0.5, 0, 1,  // 7
+		 35.08,  35.08,  35.08,  1,  1, //4
+		 35.08,  35.08, -35.08,  0,  1, //5
+		 35.08, -0.55, -35.08,  0,  0, //6
+		 35.08, -0.55,  35.08,  1,  0, //7
 
-		// back
-		-0.5, -0.5, -0.5, 0, 0, // 8 
-		0.5,  -0.5, -0.5, 1, 0, // 9
-		0.5,   0.5, -0.5, 1, 1, // 10
-		-0.5,  0.5, -0.5, 0, 1, // 11
-
-		// left
-		-0.5, -0.5, -0.5, 0, 0, // 12
-		-0.5, -0.5,  0.5, 1, 0, // 13
-		-0.5,  0.5,  0.5, 1, 1, // 14
-		-0.5,  0.5, -0.5, 0, 1, // 15
-
-		// upper
-		0.5, 0.5,  0.5, 0, 0,   // 16
-		-0.5, 0.5,  0.5, 1, 0,  // 17
-		-0.5, 0.5, -0.5, 1, 1,  // 18
-		0.5, 0.5, -0.5, 0, 1,   // 19
-
-		// bottom
-		-0.5, -0.5, -0.5, 0, 0, // 20
-		0.5, -0.5, -0.5, 1, 0,  // 21
-		0.5, -0.5,  0.5, 1, 1,  // 22
-		-0.5, -0.5,  0.5, 0, 1, // 23
 	};
 
-	unsigned int indices[] = {
-		0,  1,  2,  0,  2,  3,   // front
-		4,  5,  6,  4,  6,  7,   // right
-		8,  9,  10, 8,  10, 11,  // back
-		12, 14, 13, 12, 15, 14,  // left
-		16, 18, 17, 16, 19, 18,  // upper
-		20, 22, 21, 20, 23, 22   // bottom
-	};
+	GLuint indices[] = { 0,  2,  1,  0,  3,  2 };
 
-	glGenVertexArrays(1, &VAO25);
-	glGenBuffers(1, &VBO25);
-	glGenBuffers(1, &EBO25);
+	glGenVertexArrays(1, &VAOskyright);
+	glGenBuffers(1, &VBOskyright);
+	glGenBuffers(1, &EBOskyright);
 
-	glBindVertexArray(VAO25);
+	glBindVertexArray(VAOskyright);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO25);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOskyright);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO25);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOskyright);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// Position attribute
@@ -3453,22 +3453,387 @@ void Demo::BuildColoredSkybox() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Demo::DrawColoredSkybox() {
+void Demo::DrawColoredSkyboxRight() {
 	glUseProgram(shaderProgram);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture25);
+	glBindTexture(GL_TEXTURE_2D, textureskyright);
 	glUniform1i(glGetUniformLocation(this->shaderProgram, "ourTexture"), 0);
 
-	glBindVertexArray(VAO25); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+	glBindVertexArray(VAOskyright); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
 
-	glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, 0);
+	glm::mat4 model;
+	GLint modelLoc = glGetUniformLocation(this->shaderProgram, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindVertexArray(0);
 }
-*/
+
+void Demo::BuildColoredSkyboxLeft() {
+	// load image into texture memory
+	// ------------------------------
+	// Load and create a texture
+	glGenTextures(1, &textureskyleft);
+	glBindTexture(GL_TEXTURE_2D, textureskyleft);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width, height;
+	unsigned char* image = SOIL_load_image("left.png", &width, &height, 0, SOIL_LOAD_RGBA);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// Build geometry
+	GLfloat vertices[] = {
+		// format position, tex coords
+		// left
+		 -35.08, -0.55, -35.08,  0,  0, //12
+		 -35.08, -0.55,  35.08,  1,  0, //13
+		 -35.08,  35.08,  35.08,  1,  1, //14
+		 -35.08,  35.08, -35.08,  0,  1, //15
+
+	};
+
+	GLuint indices[] = { 0,  2,  1,  0,  3,  2 };
+
+	glGenVertexArrays(1, &VAOskyleft);
+	glGenBuffers(1, &VBOskyleft);
+	glGenBuffers(1, &EBOskyleft);
+
+	glBindVertexArray(VAOskyleft);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOskyleft);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOskyleft);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(0 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(0);
+	// TexCoord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(0); // Unbind VAO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void Demo::DrawColoredSkyboxLeft() {
+	glUseProgram(shaderProgram);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureskyleft);
+	glUniform1i(glGetUniformLocation(this->shaderProgram, "ourTexture"), 0);
+
+	glBindVertexArray(VAOskyleft); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+
+	glm::mat4 model;
+	GLint modelLoc = glGetUniformLocation(this->shaderProgram, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindVertexArray(0);
+}
+
+void Demo::BuildColoredSkyboxTop() {
+	// load image into texture memory
+	// ------------------------------
+	// Load and create a texture
+	glGenTextures(1, &textureskytop);
+	glBindTexture(GL_TEXTURE_2D, textureskytop);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width, height;
+	unsigned char* image = SOIL_load_image("top.png", &width, &height, 0, SOIL_LOAD_RGBA);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// Build geometry
+	GLfloat vertices[] = {
+		// format position, tex coords
+		// top
+		 35.08,  35.08,  -35.08,  0,  0,
+		-35.08,  35.08,  -35.08,  1,  0,
+		-35.08,  35.08,  35.08,  1,  1,
+		 35.08,  35.08,  35.08,  0,  1,
+
+
+	};
+
+	GLuint indices[] = { 0,  1,  2,  0,  2,  3 };
+
+	glGenVertexArrays(1, &VAOskytop);
+	glGenBuffers(1, &VBOskytop);
+	glGenBuffers(1, &EBOskytop);
+
+	glBindVertexArray(VAOskytop);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOskytop);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOskytop);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(0 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(0);
+	// TexCoord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(0); // Unbind VAO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void Demo::DrawColoredSkyboxTop() {
+	glUseProgram(shaderProgram);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureskytop);
+	glUniform1i(glGetUniformLocation(this->shaderProgram, "ourTexture"), 0);
+
+	glBindVertexArray(VAOskytop); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+
+	glm::mat4 model;
+	GLint modelLoc = glGetUniformLocation(this->shaderProgram, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindVertexArray(0);
+}
+
+void Demo::BuildColoredSkyboxBottom() {
+	// load image into texture memory
+	// ------------------------------
+	// Load and create a texture
+	glGenTextures(1, &textureskybottom);
+	glBindTexture(GL_TEXTURE_2D, textureskybottom);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width, height;
+	unsigned char* image = SOIL_load_image("bottom.png", &width, &height, 0, SOIL_LOAD_RGBA);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// Build geometry
+	GLfloat vertices[] = {
+		// format position, tex coords
+		// bottom
+		-35.08, -0.55, -35.08,  0,  0,
+		 35.08, -0.55, -35.08,  1,  0,
+		 35.08, -0.55,  35.08,  1,  1,
+		-35.08, -0.55,  35.08,  0,  1,
+
+	};
+
+	GLuint indices[] = { 0,  2,  1,  0,  3,  2 };
+
+	glGenVertexArrays(1, &VAOskybottom);
+	glGenBuffers(1, &VBOskybottom);
+	glGenBuffers(1, &EBOskybottom);
+
+	glBindVertexArray(VAOskybottom);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOskybottom);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOskybottom);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(0 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(0);
+	// TexCoord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(0); // Unbind VAO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void Demo::DrawColoredSkyboxBottom() {
+	glUseProgram(shaderProgram);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureskybottom);
+	glUniform1i(glGetUniformLocation(this->shaderProgram, "ourTexture"), 0);
+
+	glBindVertexArray(VAOskybottom); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+
+	glm::mat4 model;
+	GLint modelLoc = glGetUniformLocation(this->shaderProgram, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindVertexArray(0);
+}
+
+void Demo::BuildColoredSkyboxFront() {
+	// load image into texture memory
+	// ------------------------------
+	// Load and create a texture
+	glGenTextures(1, &textureskyfront);
+	glBindTexture(GL_TEXTURE_2D, textureskyfront);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width, height;
+	unsigned char* image = SOIL_load_image("front.png", &width, &height, 0, SOIL_LOAD_RGBA);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// Build geometry
+	GLfloat vertices[] = {
+		// format position, tex coords
+		// front
+		-35.08, -0.55, 35.08,  0,  0, //0
+		 35.08, -0.55, 35.08,  1,  0, //1
+		 35.08, 35.08, 35.08,  1,  1, //2
+		-35.08, 35.08, 35.08,  0,  1, //3
+
+	};
+
+	GLuint indices[] = { 0,  2,  1,  0,  3,  2 };
+
+	glGenVertexArrays(1, &VAOskyfront);
+	glGenBuffers(1, &VBOskyfront);
+	glGenBuffers(1, &EBOskyfront);
+
+	glBindVertexArray(VAOskyfront);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOskyfront);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOskyfront);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(0 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(0);
+	// TexCoord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(0); // Unbind VAO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void Demo::DrawColoredSkyboxFront() {
+	glUseProgram(shaderProgram);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureskyfront);
+	glUniform1i(glGetUniformLocation(this->shaderProgram, "ourTexture"), 0);
+
+	glBindVertexArray(VAOskyfront); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+
+	glm::mat4 model;
+	GLint modelLoc = glGetUniformLocation(this->shaderProgram, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindVertexArray(0);
+}
+
+void Demo::BuildColoredSkyboxBack() {
+	// load image into texture memory
+	// ------------------------------
+	// Load and create a texture
+	glGenTextures(1, &textureskyback);
+	glBindTexture(GL_TEXTURE_2D, textureskyback);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width, height;
+	unsigned char* image = SOIL_load_image("back.png", &width, &height, 0, SOIL_LOAD_RGBA);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// Build geometry
+	GLfloat vertices[] = {
+		// format position, tex coords
+		// back
+		-35.08, -0.55, -35.08,  0,  0, //8
+		 35.08, -0.55, -35.08,  1,  0, //9
+		 35.08, 35.08, -35.08,  1,  1, //10
+		-35.08, 35.08, -35.08,  0,  1, //11
+
+	};
+
+	GLuint indices[] = { 0,  2,  1,  0,  3,  2 };
+
+	glGenVertexArrays(1, &VAOskyback);
+	glGenBuffers(1, &VBOskyback);
+	glGenBuffers(1, &EBOskyback);
+
+	glBindVertexArray(VAOskyback);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOskyback);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOskyback);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(0 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(0);
+	// TexCoord attribute
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(0); // Unbind VAO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void Demo::DrawColoredSkyboxBack() {
+	glUseProgram(shaderProgram);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textureskyback);
+	glUniform1i(glGetUniformLocation(this->shaderProgram, "ourTexture"), 0);
+
+	glBindVertexArray(VAOskyback); // seeing as we only have a single VAO there's no need to bind it every time, but we'll do so to keep things a bit more organized
+
+	glm::mat4 model;
+	GLint modelLoc = glGetUniformLocation(this->shaderProgram, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindVertexArray(0);
+}
+
 int main(int argc, char** argv) {
 	RenderEngine &app = Demo();
-	app.Start("Proyek Akhir Amigos: Ruang Tamu Minimalis", 800, 600, false, false);
+	app.Start("Proyek Akhir Amigos: Ruang Tamu Minimalis", 1920, 1080, false, true);
 }
